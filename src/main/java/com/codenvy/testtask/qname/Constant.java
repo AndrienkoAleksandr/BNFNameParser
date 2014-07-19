@@ -7,8 +7,8 @@ package com.codenvy.testtask.qname;
  */
 public interface Constant {
     char[] NON_SPACE_CHAR = { '/', ':', '*', '\'', '"', '|'};
-    char[] ONE_CHAR_SIMPLE_NAME = {'.', '/', ':', '*', '\'', '"', '|'};
-    String[] SPECIAL_CHECK = {"[", "]"};
+    char[] WRONG_ONE_CHAR_SIMPLE_NAME = {'.', '/', ':', '*', '\'', '"', '|'};
+    char[] SPECIAL_CHECK = {'[', ']'};
     //Todo don't forget for two symbols which crashed!!!!!! It's need to check!!!!!!!
     char[] WHITE_SPACE = {
             '\u0009',

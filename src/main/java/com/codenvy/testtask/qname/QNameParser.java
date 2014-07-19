@@ -22,9 +22,12 @@ public class QNameParser {
         if (!isPrefixedName(line)) {
             validSimpleName(line);
             result.setLocalName(line);
+            return result;
+        } else {
+            validPrefixedName(line);
         }
-
-        System.out.println(result.getAsString());
+//todo it'll be delete
+//        System.out.println(result.getAsString());
         return result;
     }
 
@@ -40,7 +43,6 @@ public class QNameParser {
         Matcher matcher = pattern.matcher(line);
         if (matcher.find()) {
             isPrefixedName = true;
-            System.out.println(matcher.find());
             return true;
         }
         return false;
@@ -73,7 +75,7 @@ public class QNameParser {
      character *)
      */
     private void validSimpleName(String line) throws IllegalNameException {
-        String wrongSequence = String.valueOf(Constant.ONE_CHAR_SIMPLE_NAME)+ String.valueOf(Constant.WHITE_SPACE);
+        String wrongSequence = String.valueOf(Constant.WRONG_ONE_CHAR_SIMPLE_NAME)+ String.valueOf(Constant.WHITE_SPACE);
         Pattern pattern = Pattern.compile("[" + wrongSequence + "]");
         Matcher matcher = pattern.matcher(line);
         if (matcher.find()) {
@@ -82,14 +84,22 @@ public class QNameParser {
         /*special check for symbol '[' and ']',
         which Pattern can't check it's separator symbol for finding class symbols
         */
-        for (String elem: Constant.SPECIAL_CHECK) {
-            if (line.contains(elem)) {
+        for (char elem: Constant.SPECIAL_CHECK) {
+            if (line.contains(String.valueOf(elem))) {
                 throw new IllegalNameException();
             }
         }
     }
 
+    private void validPrefixedName(String line) {
+
+    }
+
     private void validPrefix(String line) {
+
+    }
+
+    private void validLocalName(String line) {
 
     }
 
