@@ -4,19 +4,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class parse line to class QName
+ * This class parses line to class QName
  * @author Created by Andrienko Alexander on 16.07.2014.
  * @version 0.2
  */
 public class QNameParser {
 
     private boolean isPrefixedName;
-    private String lineForParsing;
 
     public QNameParser() {
         isPrefixedName = false;
     }
 
+    /**
+     * This method parses line to class QName
+     * @param line this is line must be parse to class QName
+     * @return result of parsing line to class QName
+     * @throws IllegalNameException
+     */
     QName parse(String line) throws IllegalNameException {
         checkingForEmptiness(line);
         QName result = new QName();
@@ -27,14 +32,16 @@ public class QNameParser {
         } else {
             validAndParsePrefixedName(line, result);
         }
+        //todo line 30-31 need delete after completing project
+        System.out.println("is valid " + line);
         return result;
     }
 
     /**
-    * This method check line is prefixed name or not.
+    * This method checks line is prefixed name or not.
     * Prefixed name separated by symbol ':'.
     * Order for checking prefixedname ::= prefix ':' localname/
-    * @param line
+    * @param line this is line must be parse to class QName
     * @throws IllegalNameException
     */
     private boolean isPrefixedName(String line) throws IllegalNameException{
@@ -52,9 +59,9 @@ public class QNameParser {
     }
 
     /**
-     * This method check line is null or line equals char ''.
+     * This method checks line is null or line equals char ''.
      * If line is empty throws IllegalNameException
-     * @param line
+     * @param line this is line must be parse to class QName
      * @throws IllegalNameException
      */
     private void checkingForEmptiness(String line) throws IllegalNameException {
@@ -69,14 +76,21 @@ public class QNameParser {
     }
 
     /**
-    * This method does verification of rightness Simple Name.
-    * Order for checking:
-    * simplename ::=onecharsimplename | twocharsimplename | threeormorecharname
-    *onecharsimplename ::= (* Any Unicode character except:
-     '.', '/', ':', '[', ']', '*',
-     ''', '"', '|' or any whitespace
-     character *)
-     //todo this is java comment doesn't complete
+     * This method does verification of rightness Simple Name.
+     * Order for checking:
+     * simplename ::=onecharsimplename | twocharsimplename | threeormorecharname
+     * onecharsimplename ::= (* Any Unicode character except:
+     * '.', '/', ':', '[', ']', '*',
+     * ''', '"', '|' or any whitespace
+     * character *)
+     * twocharsimplename ::= '.' onecharsimplename | onecharsimplename '.' |onecharsimplename onecharsimplename
+     * threeormorecharname ::= nonspace string nonspace
+     * string ::= char | string char
+     * char ::= nonspace | ' '
+     * nonspace ::= (* Any Unicode character except: '/', ':', '[', ']', '*', ''', '"', '|'
+     * or any whitespace character *)
+     * @param line this is line must be parse to class QName
+     * @throws IllegalNameException
      */
     private void validSimpleName(String line) throws IllegalNameException {
         switch (line.length()) {
@@ -99,27 +113,48 @@ public class QNameParser {
                 validLineWithTreeOrMoreChar(line);
             break;
         }
-        System.out.println("is valid " + line);
+
     }
 
-    private void validLocalName(String line) throws IllegalNameException {
-        if (line.length() > 0 && line.length() <= 2) {
-            linesConsistOfNonSpace(line);
+    /**
+     * This method checks line of localname
+     * @param localName this is parameter is line localname
+     * @throws IllegalNameException
+     */
+    private void validLocalName(String localName) throws IllegalNameException {
+        if (localName.length() > 0 && localName.length() <= 2) {
+            linesConsistOfNonSpace(localName);
             return;
         }
-        validLineWithTreeOrMoreChar(line);// if line.length >= 3
+        validLineWithTreeOrMoreChar(localName);// if line.length >= 3
     }
 
-    private void validLineWithTreeOrMoreChar(String line) throws IllegalNameException {
-        int sizeLine = line.length();
-        linesConsistOfOneCharSimpleName(line.substring(0, 1));
-        linesConsistOfOneCharSimpleName(line.substring(sizeLine - 1, sizeLine));
-        String string = line.substring(1, sizeLine - 1);
+    /**
+     * This method realizes order of parsing:
+     * threeormorecharname ::= nonspace string nonspace
+     * string ::= char | string char
+     * char ::= nonspace | ' '
+     * nonspace ::= (* Any Unicode character except: '/', ':', '[', ']', '*', ''', '"', '|'
+     * or any whitespace character *)
+     * @param string this line must be tested for a rightness
+     * @throws IllegalNameException
+     */
+    private void validLineWithTreeOrMoreChar(String string) throws IllegalNameException {
+        int sizeLine = string.length();
+        linesConsistOfOneCharSimpleName(string.substring(0, 1));
+        linesConsistOfOneCharSimpleName(string.substring(sizeLine - 1, sizeLine));
+        String line = string.substring(1, sizeLine - 1);
         String wrongSequence = String.valueOf(Constant.NON_SPACE_CHAR)
                 + String.valueOf(Constant.WHITE_SPACE);
-        linesConsistOfRightSequence(string, wrongSequence);
+        linesConsistOfRightSequence(line, wrongSequence);
     }
 
+    /**
+     * This method parses line prefixedname to prefix and localname
+     * @param line this is line must be parse to class QName
+     * @param result this is link to object QName
+     * @throws IllegalNameException
+     */
     private void validAndParsePrefixedName(String line, QName result) throws IllegalNameException {
         String prefix;
         String localName;
@@ -140,10 +175,16 @@ public class QNameParser {
         }
     }
 
+    //todo
     private void validPrefix(String line) {
 
     }
 
+    /**
+     * This method checks line. Line mustn't has NON_SPACE_CHAR.
+     * @param line
+     * @throws IllegalNameException
+     */
     private void linesConsistOfNonSpace(String line) throws IllegalNameException {
         String wrongSequence = String.valueOf(Constant.NON_SPACE_CHAR)
                 + String.valueOf(Constant.WHITE_SPACE) + Constant.SPACE;
@@ -156,6 +197,12 @@ public class QNameParser {
         linesConsistOfRightSequence(line, wrongSequence);
     }
 
+    /**
+     * This method check line. Line mustn't has wrong chars from wrongSequence.
+     * @param line must be tested for a rightness
+     * @param wrongSequence "wrong" symbols
+     * @throws IllegalNameException
+     */
     private void linesConsistOfRightSequence(String line, String wrongSequence) throws IllegalNameException {
         Pattern pattern = Pattern.compile("[" + wrongSequence + "]");
         Matcher matcher = pattern.matcher(line);
@@ -163,7 +210,7 @@ public class QNameParser {
             throw new IllegalNameException();
         }
         /*special check for symbol '[' and ']',
-        which Pattern can't check it's separator symbol for finding class symbols
+        * which classPattern can't check, because it's separator symbol for finding class symbols.
         */
         for (char elem: Constant.SPECIAL_CHECK) {
             if (line.contains(String.valueOf(elem))) {
@@ -171,15 +218,4 @@ public class QNameParser {
             }
         }
     }
-
-    //todo
-//    private int charExistAmountTimes(String line, char symbol) {
-//        Pattern pattern = Pattern.compile("[" + symbol + "]");
-//        Matcher matcher = pattern.matcher(line);
-//        int count = 0;
-//        while (matcher.find()) {
-//            count++;
-//        }
-//        return count;
-//    }
 }
