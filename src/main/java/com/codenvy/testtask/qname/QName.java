@@ -1,7 +1,8 @@
 package com.codenvy.testtask.qname;
 
 /**
- * Created by USER on 16.07.2014.
+ * @author Created by Andrienko Alexander on 16.07.2014.
+ * @version 0.3
  */
 public class QName {
     private String prefix = "";
@@ -12,7 +13,6 @@ public class QName {
     public String getLocalName() {
         return localName;
     }
-    //TODO ask for right string scope
     public String getAsString() {
         return "[" + prefix + "]" + localName;
     }

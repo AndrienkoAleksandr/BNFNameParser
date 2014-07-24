@@ -1,7 +1,8 @@
 package com.codenvy.testtask.qname;
 
 /**
- * Created by USER on 16.07.2014.
+ * @author Created by Andrienko Alexander on 16.07.2014.
+ * @version 0.3
  */
 public class IllegalNameException extends Exception {
     public IllegalNameException() {
