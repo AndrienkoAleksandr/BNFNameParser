@@ -9,17 +9,18 @@ public interface Constant {
 
     String SPACE = "\u0020";
 
-    String WRONG_NON_SPACE_CHAR = "/:*'" + '"' + "|";
+    String WRONG_NON_SPACE_WITHOUT_WHITE_SPACE = "/:*'" + '"' + "|";
 
-    String WRONG_ONE_CHAR_SIMPLE_NAME = WRONG_NON_SPACE_CHAR + POINT;
+    String WRONG_ONE_CHAR_SIMPLE_NAME_WITHOUT_WHITE_SPACE = WRONG_NON_SPACE_WITHOUT_WHITE_SPACE + POINT;
 
     String SPECIAL_CHECK = "[]";
 
-    //Todo don't forget for two symbols which crashed!!!!!! It's need to check!!!!!!!
     String WHITE_SPACE =
             "\u0009" +
+            "\n" + //\u000A
             "\u000B" +
             "\u000C" +
+            "\r" + // \u000D
             "\u0085" +
             "\u00A0" +
             "\u1680" +
@@ -39,6 +40,10 @@ public interface Constant {
             "\u202F" +
             "\u205F" +
             "\u3000";
+
+    String WRONG_SEQUENCE_NON_SPACE = WRONG_NON_SPACE_WITHOUT_WHITE_SPACE + WHITE_SPACE + SPACE;
+    String WRONG_SEQUENCE_NON_SPACE_WITHOUT_SPACE = WRONG_NON_SPACE_WITHOUT_WHITE_SPACE + WHITE_SPACE;
+    String WRONG_SEQUENCE_ONE_CHAR_SIMPLE_NAME = WRONG_ONE_CHAR_SIMPLE_NAME_WITHOUT_WHITE_SPACE + WHITE_SPACE + SPACE;
 
     String BASE_CHAR = "\u0041-\u005A\u0061-\u007A\u00C0-\u00D6\u00D8-\u00F6" +
             "\u00F8-\u00FF\u0100-\u0131\u0134-\u013E\u0141-\u0148" +
@@ -110,5 +115,5 @@ public interface Constant {
 
     String FIRST_CHAR_XML_NAME = LETTER + "_:";
 
-    String NAME_CHAR = LETTER + DIGIT + ".-_:" + COMBINING_CHAR + EXTENDER;
+    String SYMBOL_FOR_SECOND_AND_NEXT_CHARS_OF_XML_NAME = LETTER + DIGIT + ".-:" + COMBINING_CHAR + EXTENDER;
 }

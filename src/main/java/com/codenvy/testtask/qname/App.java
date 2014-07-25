@@ -10,7 +10,6 @@ import java.util.Scanner;
 public class App {
     public static void main( String[] args ) {
         String qualifiedName;
-        String result;
         Scanner scanner = new Scanner(System.in);
         QNameParser qNameParser = new QNameParser();
         do {

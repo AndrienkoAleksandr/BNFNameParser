@@ -9,13 +9,6 @@ import java.util.regex.Pattern;
  * @version 0.3
  */
 public class QNameParser {
-
-    private boolean isPrefixedName;
-
-    public QNameParser() {
-        isPrefixedName = false;
-    }
-
     /**
      * This method parses line to class QName
      * @param line this is line must be parse to class QName
@@ -36,7 +29,7 @@ public class QNameParser {
     }
 
     /**
-    * This method checks line is prefixed name or not.
+    * This method checks line is full name.
     * Prefixed name separated by symbol ':'.
     * Order for checking prefixedname ::= prefix ':' localname/
     * @param line this is line must be parse to class QName
@@ -45,15 +38,7 @@ public class QNameParser {
     private boolean isFullName(String line) throws IllegalNameException{
         Pattern pattern = Pattern.compile("[:]+");//':' is exist at least one time
         Matcher matcher = pattern.matcher(line);
-        if (matcher.find()) {
-            //todo this check is
-//            if (line.length() <= 2) { //if line is ':' or 'X:' or ':X'
-//                throw new IllegalNameException();
-//            }
-            isPrefixedName = true;
-            return true;
-        }
-        return false;
+        return matcher.find();
     }
 
     /**
@@ -111,7 +96,6 @@ public class QNameParser {
                 validLineWithTreeOrMoreChar(line);
             break;
         }
-
     }
 
     /**
@@ -143,9 +127,7 @@ public class QNameParser {
         linesConsistOfOneCharSimpleName(string.substring(0, 1));
         linesConsistOfOneCharSimpleName(string.substring(sizeLine - 1, sizeLine));
         String line = string.substring(1, sizeLine - 1);
-        String wrongSequence = Constant.WRONG_NON_SPACE_CHAR
-                + Constant.WHITE_SPACE;
-        checkLineWithHelpWrongSequence(line, wrongSequence);
+        checkLineWithHelpWrongSequence(line, Constant.WRONG_SEQUENCE_NON_SPACE_WITHOUT_SPACE);
     }
 
     /**
@@ -181,27 +163,25 @@ public class QNameParser {
     }
 
     /**
-     * This method checks line. Line mustn't has WRONG_NON_SPACE_CHAR.
+     * This method checks line. Line mustn't has WRONG_NON_SPACE_WITHOUT_WHITE_SPACE.
      * @param line must be tested for a rightness
      * @throws IllegalNameException
      */
     private void linesConsistOfNonSpace(String line) throws IllegalNameException {
-        String wrongSequence = Constant.WRONG_NON_SPACE_CHAR + Constant.WHITE_SPACE + Constant.SPACE;
-        checkLineWithHelpWrongSequence(line, wrongSequence);
+        checkLineWithHelpWrongSequence(line, Constant.WRONG_SEQUENCE_NON_SPACE);
     }
 
     /**
-     * This method checks line. Line mustn't has WRONG_ONE_CHAR_SIMPLE_NAME.
+     * This method checks line. Line mustn't has WRONG_ONE_CHAR_SIMPLE_NAME_WITHOUT_WHITE_SPACE.
      * @param line must be tested for a rightness
      * @throws IllegalNameException
      */
     private void linesConsistOfOneCharSimpleName(String line) throws IllegalNameException {
-        String wrongSequence = Constant.WRONG_ONE_CHAR_SIMPLE_NAME + Constant.WHITE_SPACE + Constant.SPACE;
-        checkLineWithHelpWrongSequence(line, wrongSequence);
+        checkLineWithHelpWrongSequence(line, Constant.WRONG_SEQUENCE_ONE_CHAR_SIMPLE_NAME);
     }
 
     /**
-     * This method check line. Line mustn't has wrong chars from wrongSequence.
+     * This method check line. Line mustn't has wrong chars from WRONG_SEQUENCE_NON_SPACE.
      * @param line must be tested for a rightness
      * @param wrongSequence "wrong" symbols
      * @throws IllegalNameException
@@ -215,7 +195,6 @@ public class QNameParser {
         /*special check for symbol '[' and ']',
         * which classPattern can't check, because it's separator symbol for finding class symbols.
         */
-        //todo one element!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         for (char elem: Constant.SPECIAL_CHECK.toCharArray()) {
             if (line.contains(String.valueOf(elem))) {
                 throw new IllegalNameException();
@@ -229,20 +208,13 @@ public class QNameParser {
      * @param rightSequence "right" symbols
      * @throws IllegalNameException
      */
-    private void checkLineWithHelpRightSequence(String line, String rightSequence) throws IllegalNameException {
+    private void checkLineWithHelpRightSequence(String line, String rightSequence)
+            throws IllegalNameException {
         Pattern pattern = Pattern.compile("[" + rightSequence + "]" + "{" + line.length() + "}");
         Matcher matcher = pattern.matcher(line);
         if (!matcher.find()) {
             throw new IllegalNameException("line has invalid symbols");
         }
-    }
-
-    //todo
-    public static void main(String[] args) throws IllegalNameException {
-        QNameParser qNameParser = new QNameParser();
-        qNameParser.checkLineWithHelpRightSequence("Adf", Constant.LETTER + "_:");
-        qNameParser.checkLineWithHelpRightSequence("adJ", "a-zJ");
-        qNameParser.validXMLName("_ere r");
     }
 
     /**
@@ -252,16 +224,44 @@ public class QNameParser {
      */
     private void validXMLName(String xmlName) throws IllegalNameException {
         checkingForEmptiness(xmlName);
-        checkFirstSymbolXML(xmlName);
-        checkLineWithHelpRightSequence(xmlName.substring(1, xmlName.length()), Constant.NAME_CHAR);
+        checkFirstCharOfXmlName(xmlName);
+        checkSecondAndNextCharsOfXmlName(xmlName);
     }
 
     /**
-     * This methods checks first char of xml name
+     * This methods checks first char of xmlname
      * @param xmlName simple xml name for checking
      * @throws IllegalNameException
      */
-    private void checkFirstSymbolXML(String xmlName) throws IllegalNameException {
+    private void checkFirstCharOfXmlName(String xmlName) throws IllegalNameException {
+        String symbol = xmlName.substring(0, 1);
+        //special checking for some symbols
+        if (symbol.equals("-")) {
+            throw new IllegalNameException("line has invalid symbols");
+        }
+        //main checking
         checkLineWithHelpRightSequence(xmlName.substring(0, 1), Constant.FIRST_CHAR_XML_NAME);
+    }
+
+    /**
+     * This methods checks all chars of xmlname except first char
+     * @param xmlName simple xml name for checking
+     * @throws IllegalNameException
+     */
+    private void checkSecondAndNextCharsOfXmlName(String xmlName) throws IllegalNameException {
+        //special checking for some symbols
+        String rightSymbolForXmlName = "1";
+        String line = xmlName.substring(1, xmlName.length());
+        if (line.contains("-")) {
+            line = line.replace("-", rightSymbolForXmlName);
+        }
+        if (line.contains("_")) {
+            line = line.replace("_", rightSymbolForXmlName);
+        }
+        if (line.contains("/")) {
+            throw new IllegalNameException("line has invalid symbols");
+        }
+        //main checking
+        checkLineWithHelpRightSequence(line, Constant.SYMBOL_FOR_SECOND_AND_NEXT_CHARS_OF_XML_NAME);
     }
 }

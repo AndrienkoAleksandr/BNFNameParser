@@ -2,43 +2,23 @@ package com.codenvy.testtask.qname;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 
 /**
  * @author Created by Andrienko Alexander on 16.07.2014.
  * @version 0.3
- * Unit test for QNameParser
+ * Unit test for testing of localname and simplename of QNameParser
  */
-public class QNameParserTest {
+public class SimpleNameAndLocalNameTest {
 
     private QNameParser qNameParser;
     private QName qName;
-    static final String All_WRONG_CHARS_FOR_NON_SPACE;
-    static final String All_WRONG_CHARS_FOR_ONE_CHAR_SIMPLE_NAME;
-    static final String All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS;
-    static final String All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE;
-
-    static {
-        String allWrongSymbolsForNonSpaceWithoutSpace =
-                Constant.SPECIAL_CHECK  +
-                Constant.WHITE_SPACE +
-                Constant.WRONG_NON_SPACE_CHAR;
-        String allWrongSymbolsForNonSpace = allWrongSymbolsForNonSpaceWithoutSpace +
-                Constant.SPACE;
-        All_WRONG_CHARS_FOR_NON_SPACE = allWrongSymbolsForNonSpace;
-
-        All_WRONG_CHARS_FOR_ONE_CHAR_SIMPLE_NAME = allWrongSymbolsForNonSpace + Constant.POINT;
-
-        int index = allWrongSymbolsForNonSpace.indexOf(':');
-        All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS =
-                allWrongSymbolsForNonSpace.substring(0, index) +
-                allWrongSymbolsForNonSpace.substring(index + 1, allWrongSymbolsForNonSpace.length());
-
-        index = allWrongSymbolsForNonSpaceWithoutSpace.indexOf(':');
-        All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE =
-                allWrongSymbolsForNonSpaceWithoutSpace.substring(0, index) +
-                allWrongSymbolsForNonSpaceWithoutSpace.substring(index + 1, allWrongSymbolsForNonSpaceWithoutSpace.length());
-    }
+    static final String WRONG_CHARS_OF_NON_SPACE = Constant.WRONG_SEQUENCE_NON_SPACE;
+    static final String WRONG_CHARS_OF_ONE_CHAR_SIMPLE_NAME = Constant.WRONG_SEQUENCE_ONE_CHAR_SIMPLE_NAME;
+    static final String WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS = WRONG_CHARS_OF_NON_SPACE.replace(":", "");
+    static final String WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE =
+            WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.replace(" ", "");
 
     @Before
     public void init() {
@@ -46,7 +26,7 @@ public class QNameParserTest {
         qName = null;
     }
 
-    //Check simplename with one symbols
+    /*Checking simplename with one symbols*/
 
     @Test(expected = IllegalNameException.class)
     public void testNullLine() throws IllegalNameException {
@@ -67,15 +47,17 @@ public class QNameParserTest {
     @Test
     public void testValidNameWithOneSymbol() {
         int count = 0;
-        for (char elem: All_WRONG_CHARS_FOR_ONE_CHAR_SIMPLE_NAME.toCharArray()) {
+        for (char elem: WRONG_CHARS_OF_ONE_CHAR_SIMPLE_NAME.toCharArray()) {
             try {
                 qNameParser.parse(String.valueOf(elem));
             } catch (IllegalNameException e) {
                 count++;
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_ONE_CHAR_SIMPLE_NAME.length());
+        assertTrue(count == WRONG_CHARS_OF_ONE_CHAR_SIMPLE_NAME.length());
     }
+
+    //Checking simplename with two symbols
 
     @Test
     public void testValidSimpleNameWithTwoSymbol() throws IllegalNameException {
@@ -95,129 +77,47 @@ public class QNameParserTest {
     @Test
     public void testValidSimpleNameWithTwoSymbol1() {
         int count = 0;
-        for (char elem : All_WRONG_CHARS_FOR_NON_SPACE.toCharArray()) {
+        for (char elem : WRONG_CHARS_OF_NON_SPACE.toCharArray()) {
             try {
                 qNameParser.parse('a' + String.valueOf(elem));
             } catch (IllegalNameException e) {
                 count++;
-            } catch (Exception e) {
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE.length());
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE.length());
     }
 
     @Test
     public void testValidSimpleNameWithTwoSymbol2() {
         int count = 0;
-        for (char elem : All_WRONG_CHARS_FOR_NON_SPACE.toCharArray()) {
+        for (char elem : WRONG_CHARS_OF_NON_SPACE.toCharArray()) {
             try {
                 qNameParser.parse(String.valueOf(elem) + 'a');
             } catch (IllegalNameException e) {
                 count++;
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE.length());
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE.length());
     }
 
-    //Check simplename with more then tree symbols
+    //Checking simplename with three ore more then tree symbols
 
     @Test(expected = IllegalNameException.class)
     public void testSimpleNameWithInvalidChar1() throws IllegalNameException {
+        qNameParser.parse(".ab");
         qNameParser.parse(".abc");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testSimpleNameWithInvalidChar2() throws IllegalNameException {
+        qNameParser.parse("ab.");
         qNameParser.parse("abc.");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testSimpleNameWithInvalidChar3() throws IllegalNameException {
+        qNameParser.parse(".ab.");
         qNameParser.parse(".abc.");
-    }
-
-    @Test
-    public void testSimpleNameWithOneDifferentInvalidChar4() {
-        int count = 0;
-        for (char elem : All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
-            try {
-                qNameParser.parse("abc" + elem);
-            } catch (IllegalNameException e) {
-                count++;
-            }
-        }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS.length());
-    }
-
-    @Test
-    public void testSimpleNameWithOneDifferentInvalidChar5() {
-        int count = 0;
-        for (char elem : All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
-            try {
-                qNameParser.parse(elem + "abc");
-            } catch (IllegalNameException e) {
-                count++;
-            }
-        }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS.length());
-    }
-
-    @Test
-    public void testSimpleNameWithOneDifferentInvalidChar6() {
-        int count = 0;
-        for (char elem : All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.toCharArray()) {
-            try {
-                qNameParser.parse("fde" + elem + "abc");
-            } catch (IllegalNameException e) {
-                count++;
-            }
-        }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length());
-    }
-
-    @Test
-    public void testSimpleNameWithOneDifferentInvalidChar7() {
-        int count = 0;
-        int size = All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
-        for (int i = 0, j = size - 1; i < size; i++, j--) {
-            try {
-                qNameParser.parse("abc" + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i)  + "" +
-                        + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j));
-            } catch (IllegalNameException e) {
-                count++;
-            }
-        }
-        assertTrue(count == size);
-    }
-
-    @Test
-    public void testSimpleNameWithOneDifferentInvalidChar8() {
-        int count = 0;
-        int size = All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
-        for (int i = 0, j = size - 1; i < size; i++, j--) {
-            try {
-                qNameParser.parse(All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i)  + "" +
-                        + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j) + "abc" );
-            } catch (IllegalNameException e) {
-                count++;
-            }
-        }
-        assertTrue(count == size);
-    }
-
-    @Test
-    public void testSimpleNameWithOneDifferentInvalidChar9() {
-        int count = 0;
-        int size = All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
-        for (int i = 0, j = size - 1; i < size; i++, j--) {
-            try {
-                qNameParser.parse("abc" + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i) + "" +
-                        + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j) + "fde");
-            } catch (IllegalNameException e) {
-                count++;
-            }
-        }
-        assertTrue(count == size);
     }
 
     @Test
@@ -264,7 +164,91 @@ public class QNameParserTest {
         qName = qNameParser.parse("b bc.cdd");
     }
 
-    //test localname
+    @Test
+    public void testSimpleNameWithOneDifferentInvalidChar4() {
+        int count = 0;
+        for (char elem : WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
+            try {
+                qNameParser.parse("abc" + elem);
+            } catch (IllegalNameException e) {
+                count++;
+            }
+        }
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.length());
+    }
+
+    @Test
+    public void testSimpleNameWithOneDifferentInvalidChar5() {
+        int count = 0;
+        for (char elem : WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
+            try {
+                qNameParser.parse(elem + "abc");
+            } catch (IllegalNameException e) {
+                count++;
+            }
+        }
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.length());
+    }
+
+    @Test
+    public void testSimpleNameWithOneDifferentInvalidChar6() {
+        int count = 0;
+        for (char elem : WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.toCharArray()) {
+            try {
+                qNameParser.parse("fde" + elem + "abc");
+            } catch (IllegalNameException e) {
+                count++;
+            }
+        }
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length());
+    }
+
+    @Test
+    public void testSimpleNameWithOneDifferentInvalidChar7() {
+        int count = 0;
+        int size = WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
+        for (int i = 0, j = size - 1; i < size; i++, j--) {
+            try {
+                qNameParser.parse("abc" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i)
+                        + "" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j));
+            } catch (IllegalNameException e) {
+                count++;
+            }
+        }
+        assertTrue(count == size);
+    }
+
+    @Test
+    public void testSimpleNameWithOneDifferentInvalidChar8() {
+        int count = 0;
+        int size = WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
+        for (int i = 0, j = size - 1; i < size; i++, j--) {
+            try {
+                qNameParser.parse(WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i) + "" +
+                        + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j) + "abc" );
+            } catch (IllegalNameException e) {
+                count++;
+            }
+        }
+        assertTrue(count == size);
+    }
+
+    @Test
+    public void testSimpleNameWithOneDifferentInvalidChar9() {
+        int count = 0;
+        int size = WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
+        for (int i = 0, j = size - 1; i < size; i++, j--) {
+            try {
+                qNameParser.parse("abc" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i) +
+                         "" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j) + "fde");
+            } catch (IllegalNameException e) {
+                count++;
+            }
+        }
+        assertTrue(count == size);
+    }
+
+    //Checking localname
 
     @Test
      public void testValidLocalNameWithOneOreTwoChar() throws IllegalNameException {
@@ -279,59 +263,59 @@ public class QNameParserTest {
     @Test
      public void testValidLocalNameWithOneChar() {
         int count = 0;
-        for (char elem: All_WRONG_CHARS_FOR_NON_SPACE.toCharArray()) {
+        for (char elem: WRONG_CHARS_OF_NON_SPACE.toCharArray()) {
             try {
                 qName = qNameParser.parse("prefix:" + String.valueOf(elem));
             } catch (IllegalNameException e) {
                 count++;
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE.length());
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE.length());
     }
 
     @Test
     public void testValidLocalNameWithTwoChars2() {
         int count = 0;
-        for (char elem: All_WRONG_CHARS_FOR_NON_SPACE.toCharArray()) {
+        for (char elem: WRONG_CHARS_OF_NON_SPACE.toCharArray()) {
             try {
                 qName = qNameParser.parse("prefix:" + 'a' +String.valueOf(elem));
             } catch (IllegalNameException e) {
                 count++;
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE.length());
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE.length());
     }
 
     @Test
     public void testInValidLocalNameWithTwoChars3() {
         int count = 0;
-        for (char elem: All_WRONG_CHARS_FOR_NON_SPACE.toCharArray()) {
+        for (char elem: WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
             try {
                 qName = qNameParser.parse("prefix:" + String.valueOf(elem) + 'a');
             } catch (IllegalNameException e) {
                 count++;
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE.length());
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.length());
     }
 
-//    @Test
-//    public void testInValidLocalNameWithTwoChars4() {
-//        int count = 0;
-//        int size = All_WRONG_CHARS_FOR_NON_SPACE.length;
-//        for (int i = 0, j = size - 1; i < size; i++, j--) {
-//            try {
-//                qName = qNameParser.parse("prefix:" +
-//                        String.valueOf(All_WRONG_CHARS_FOR_NON_SPACE[i]) +
-//                        String.valueOf(All_WRONG_CHARS_FOR_NON_SPACE[j]));
-//            } catch (IllegalNameException e) {
-//                count++;
-//            }
-//        }
-//        assertTrue(count == size);
-//    }
+    @Test
+    public void testInValidLocalNameWithTwoChars4() {
+        int count = 0;
+        int size = WRONG_CHARS_OF_NON_SPACE.length();
+        for (int i = 0, j = size - 1; i < size; i++, j--) {
+            try {
+                qName = qNameParser.parse("prefix:" +
+                        WRONG_CHARS_OF_NON_SPACE.charAt(i) +
+                        WRONG_CHARS_OF_NON_SPACE.charAt(j));
+            } catch (IllegalNameException e) {
+                count++;
+            }
+        }
+        assertTrue(count == size);
+    }
 
-    //test localname.length > 3
+    //Test where localname.length > 3
 
     @Test(expected = IllegalNameException.class)
     public void testLocalNameWithInvalidChar1() throws IllegalNameException {
@@ -351,50 +335,50 @@ public class QNameParserTest {
     @Test
     public void testLocalNameWithOneDifferentInvalidChar4() {
         int count = 0;
-        for (char elem : All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
+        for (char elem : WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
             try {
                 qNameParser.parse("prefix:abc" + elem);
             } catch (IllegalNameException e) {
                 count++;
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS.length());
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.length());
     }
 
     @Test
     public void testLocalNameWithOneDifferentInvalidChar5() {
         int count = 0;
-        for (char elem : All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
+        for (char elem : WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.toCharArray()) {
             try {
                 qNameParser.parse("prefix:" + elem + "abc");
             } catch (IllegalNameException e) {
                 count++;
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS.length());
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS.length());
     }
 
     @Test
     public void testLocalNameWithOneDifferentInvalidChar6() {
         int count = 0;
-        for (char elem : All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.toCharArray()) {
+        for (char elem : WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.toCharArray()) {
             try {
                 qNameParser.parse("prefix:fde" + elem + "abc");
             } catch (IllegalNameException e) {
                 count++;
             }
         }
-        assertTrue(count == All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length());
+        assertTrue(count == WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length());
     }
 
     @Test
     public void testLocalNameWithOneDifferentInvalidChar7() {
         int count = 0;
-        int size = All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
+        int size = WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
         for (int i = 0, j = size - 1; i < size; i++, j--) {
             try {
-                qNameParser.parse("prefix:abc" + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i)  + "" +
-                        + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j));
+                qNameParser.parse("prefix:abc" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i)
+                        + "" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j));
             } catch (IllegalNameException e) {
                 count++;
             }
@@ -405,11 +389,11 @@ public class QNameParserTest {
     @Test
     public void testLocalNameWithOneDifferentInvalidChar8() {
         int count = 0;
-        int size = All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
+        int size = WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
         for (int i = 0, j = size - 1; i < size; i++, j--) {
             try {
-                qNameParser.parse("prefix:" + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i)  + "" +
-                        + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j) + "abc" );
+                qNameParser.parse("prefix:" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i)
+                        + "" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j) + "abc" );
             } catch (IllegalNameException e) {
                 count++;
             }
@@ -420,11 +404,11 @@ public class QNameParserTest {
     @Test
     public void testLocalNameWithOneDifferentInvalidChar9() {
         int count = 0;
-        int size = All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
+        int size = WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.length();
         for (int i = 0, j = size - 1; i < size; i++, j--) {
             try {
-                qNameParser.parse("prefix:abc" + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i) + "" +
-                        + All_WRONG_CHARS_FOR_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j) + "fde");
+                qNameParser.parse("prefix:" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(i)
+                        + "" + WRONG_CHARS_OF_NON_SPACE_WITHOUT_TWO_POINTS_AND_SPACE.charAt(j) + "fde");
             } catch (IllegalNameException e) {
                 count++;
             }
@@ -459,20 +443,24 @@ public class QNameParserTest {
     @Test(expected = IllegalNameException.class)
     public void testInValidLocalNameWithMoreThenTreeSymbol1() throws IllegalNameException {
         qName = qNameParser.parse("prefix:bb cc dd ");
+        assertTrue(qName.getLocalName().equals("bb cc dd ") && qName.getPrefix().equals("prefix"));
     }
 
     @Test(expected = IllegalNameException.class)
     public void testInValidLocalNameWithMoreThenTreeSymbol2() throws IllegalNameException {
         qName = qNameParser.parse("prefix: bb cc dd");
+        assertTrue(qName.getLocalName().equals(" bb cc dd") && qName.getPrefix().equals("prefix"));
     }
 
     @Test(expected = IllegalNameException.class)
     public void testInValidLocalNameWithMoreThenTreeSymbol3() throws IllegalNameException {
         qName = qNameParser.parse("prefix: bb cc dd ");
+        assertTrue(qName.getLocalName().equals(" bb cc dd ") && qName.getPrefix().equals("prefix"));
     }
 
     @Test
     public void testValidLocalNameWithMoreThenTreeSymbol7() throws IllegalNameException {
         qName = qNameParser.parse("prefix:b bc.cdd");
+        assertTrue(qName.getLocalName().equals("b bc.cdd") && qName.getPrefix().equals("prefix"));
     }
 }
