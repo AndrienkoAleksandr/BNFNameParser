@@ -21,6 +21,7 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
     <build>
@@ -33,6 +34,18 @@
                 <configuration>
                     <parallel>methods</parallel>
                     <threadCount>10</threadCount>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.codenvy.testtask.qname.App</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

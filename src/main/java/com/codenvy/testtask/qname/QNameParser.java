@@ -84,7 +84,7 @@ public class QNameParser {
                   if (line.equals("..")) {
                       throw new IllegalNameException("double ':'");
                   } else {
-                      if (line.charAt(0) == '.' || line.charAt(1) == '.') {
+                      if (line.charAt(0) == '.' || line.charAt(1) == '.') {//check first and second chars of line
                           String checkLine = line.replace(".", "");
                           linesConsistOfOneCharSimpleName(checkLine);
                       } else {
@@ -124,9 +124,9 @@ public class QNameParser {
      */
     private void validLineWithTreeOrMoreChar(String string) throws IllegalNameException {
         int sizeLine = string.length();
-        linesConsistOfOneCharSimpleName(string.substring(0, 1));
-        linesConsistOfOneCharSimpleName(string.substring(sizeLine - 1, sizeLine));
-        String line = string.substring(1, sizeLine - 1);
+        linesConsistOfOneCharSimpleName(string.substring(0, 1));//get and check first symbol
+        linesConsistOfOneCharSimpleName(string.substring(sizeLine - 1, sizeLine));//get and check last symbol
+        String line = string.substring(1, sizeLine - 1);//get all symbols between firs and last chars
         checkLineWithHelpWrongSequence(line, Constant.WRONG_SEQUENCE_NON_SPACE_WITHOUT_SPACE);
     }
 
@@ -147,19 +147,10 @@ public class QNameParser {
         }
         prefix = line.substring(0, start);
         localName = line.substring(start + 1, line.length());
-        validPrefix(prefix);
+        validXMLName(prefix);
         validLocalName(localName);
         result.setLocalName(localName);
         result.setPrefix(prefix);
-    }
-
-    /**
-     * This method checks prefix. Line must be valid xml name.
-     * @param line xml name
-     * @throws IllegalNameException
-     */
-    private void validPrefix(String line) throws IllegalNameException {
-        validXMLName(line);
     }
 
     /**
@@ -234,7 +225,7 @@ public class QNameParser {
      * @throws IllegalNameException
      */
     private void checkFirstCharOfXmlName(String xmlName) throws IllegalNameException {
-        String symbol = xmlName.substring(0, 1);
+        String symbol = xmlName.substring(0, 1);//get first symbol
         //special checking for some symbols
         if (symbol.equals("-")) {
             throw new IllegalNameException("line has invalid symbols");
@@ -250,8 +241,8 @@ public class QNameParser {
      */
     private void checkSecondAndNextCharsOfXmlName(String xmlName) throws IllegalNameException {
         //special checking for some symbols
-        String rightSymbolForXmlName = "1";
         String line = xmlName.substring(1, xmlName.length());
+        String rightSymbolForXmlName = "a";//this is any valid symbol for xmlName
         if (line.contains("-")) {
             line = line.replace("-", rightSymbolForXmlName);
         }
