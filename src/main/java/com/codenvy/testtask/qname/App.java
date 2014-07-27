@@ -12,7 +12,7 @@ public class App {
         String qualifiedName;
         Scanner scanner = new Scanner(System.in);
         QNameParser qNameParser = new QNameParser();
-        do {
+        while (true) {
             System.out.println("Enter please qualified name.\nFor exit enter stop");
             qualifiedName = scanner.nextLine();
             if (qualifiedName == null) {
@@ -28,6 +28,6 @@ public class App {
                     e.printStackTrace();
                 }
             }
-        } while (true);
+        }
     }
 }
