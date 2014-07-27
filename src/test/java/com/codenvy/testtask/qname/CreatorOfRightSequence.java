@@ -22,6 +22,9 @@ public class CreatorOfRightSequence {
                     initStringWithAllRightSymbolsFromStringSequence(Constant.COMBINING_CHAR) +
                     initStringWithAllRightSymbolsFromStringSequence(Constant.EXTENDER);
 
+    /*
+     *This method generate all right symbols through a sequence
+     */
     private static String initStringWithAllRightSymbolsFromStringSequence(String sequence) {
         StringBuilder result = new StringBuilder();
         for(int i = 0; i < sequence.length(); i++) {
