@@ -31,7 +31,7 @@ public class QNameParser {
     /**
     * This method checks line is full name.
     * Prefixed name separated by symbol ':'.
-    * Order for checking prefixedname ::= prefix ':' localname/
+    * Order for checking prefixedname ::= prefix ':' localname
     * @param line this is line must be parse to class QName
     * @throws IllegalNameException
     */
@@ -53,7 +53,7 @@ public class QNameParser {
             e.initCause(new NullPointerException());
             throw e;
         }
-        if (line.length() == 0 || line.equals("")) {
+        if (line.length() == 0) {
             throw new IllegalNameException("Line is empty.");
         }
     }
