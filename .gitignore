@@ -1,8 +1,7 @@
 *~
-storage
+src\test\java\com\codenvy\testtask\qname\CreatorOfRightSequenceOld.java
 src\test\java\com\codenvy\testtask\qname\PrefixTestOld.java
 src\test\java\com\codenvy\testtask\qname\SimpleNameAndLocalNameTestOld.java
-src\test\java\com\codenvy\testtask\qname\CreatorOfRightSequenceOld.java
 .gitignore~ 
 ### Java ###
 *.class

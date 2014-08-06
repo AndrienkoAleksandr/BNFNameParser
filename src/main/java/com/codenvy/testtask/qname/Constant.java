@@ -9,9 +9,11 @@ public interface Constant {
 
     String SPACE = "\u0020";
 
-    String WRONG_NON_SPACE_WITHOUT_WHITE_SPACE = "/:\\[\\]*'" + '"' + "|";
+    String WRONG_NON_SPACE_WITHOUT_WHITE_SPACE = "/:*'" + '"' + "|";
 
     String WRONG_ONE_CHAR_SIMPLE_NAME_WITHOUT_WHITE_SPACE = WRONG_NON_SPACE_WITHOUT_WHITE_SPACE + POINT;
+
+    String SPECIAL_CHECK = "[]";
 
     String WHITE_SPACE =
             "\u0009" +
