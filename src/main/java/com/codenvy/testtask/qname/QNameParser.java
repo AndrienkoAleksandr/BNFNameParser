@@ -147,6 +147,13 @@ public class QNameParser {
         }
         prefix = line.substring(0, start);
         localName = line.substring(start + 1, line.length());
+        /*JDK 1.7 has completed xmlNameParser:
+        * import com.sun.xml.internal.fastinfoset.org.apache.xerces.util.XMLChar;
+        * but we used our realization method validXMLName(String prefix);
+        */
+//        if(!XMLChar.isValidName(xmlName)) {
+//            throw new IllegalNameException();
+//        }
         validXMLName(prefix);
         validLocalName(localName);
         result.setLocalName(localName);
@@ -214,13 +221,6 @@ public class QNameParser {
      * @throws IllegalNameException
      */
     private void validXMLName(String xmlName) throws IllegalNameException {
-    /*JDK 1.7 has completed xmlNameParser:
-    * import com.sun.xml.internal.fastinfoset.org.apache.xerces.util.XMLChar;
-    * but we used our realization
-    */
-//        if(!XMLChar.isValidName(xmlName)) {
-//            throw new IllegalNameException();
-//        }
         checkingForEmptiness(xmlName);
         checkFirstCharOfXmlName(xmlName);
         checkSecondAndNextCharsOfXmlName(xmlName);

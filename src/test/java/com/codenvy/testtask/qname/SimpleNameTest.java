@@ -116,13 +116,16 @@ public class SimpleNameTest {
     }
 
     @Test
-    public void testFistAndSecondSymbolsCanBeAnyUnicodeSymbolsExceptSome()
+    public void testFistAndSecondSymbolsCanBeAnyUnicodeSymbolsExceptWRONG_SEQUENCE_NON_SPACE()
             throws IllegalNameException{
         qName = qNameParser.parse("aa");
         assertTrue(qName.getLocalName().equals("aa"));
     }
 
     /*Checking simplename with three or more symbols*/
+
+    //checking first symbols of the three or more symbols simplename
+
     @Test(expected = IllegalNameException.class)
     public void testFirstCharOfTheTheeCanNOTBeSlesh() throws IllegalNameException{
         qNameParser.parse("/ab");
@@ -204,16 +207,6 @@ public class SimpleNameTest {
     }
 
     @Test(expected = IllegalNameException.class)
-    public void testFirstCharOfTheTheeCanNOTBeWhiteSpace_1() throws IllegalNameException{
-        qNameParser.parse(" ab");
-    }
-
-    @Test(expected = IllegalNameException.class)
-    public void testFirstCharOfTheMoreThenTheeCanNOTBeWhiteSpace_1() throws IllegalNameException{
-        qNameParser.parse(" abc");
-    }
-
-    @Test(expected = IllegalNameException.class)
     public void testFirstCharOfTheTheeCanNOTBeWhiteSpace_2() throws IllegalNameException{
         qNameParser.parse("\nab");
     }
@@ -233,55 +226,56 @@ public class SimpleNameTest {
         qNameParser.parse("\rabc");
     }
 
-    //////////////////////////////////
+    //checking last symbols of the three or more symbols simplename
+
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheTheeCanNOTBeSlesh() throws IllegalNameException{
-        qNameParser.parse("/ab");
+        qNameParser.parse("ab/");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheMoreThenTheeCanNOTBeSlesh() throws IllegalNameException{
-        qNameParser.parse("/abc");
+        qNameParser.parse("abc/");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheTheeCanNOTBeColon() throws IllegalNameException{
-        qNameParser.parse(":ab");
+        qNameParser.parse("ab:");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheMoreThenTheeCanNOTBeColon() throws IllegalNameException{
-        qNameParser.parse(":abc");
+        qNameParser.parse("abc:");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheTheeCanNOTBeLeftSquareBracket() throws IllegalNameException{
-        qNameParser.parse("[ab");
+        qNameParser.parse("ab[");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheMoreThenTheeCanNOTBeLeftSquareBracket() throws IllegalNameException{
-        qNameParser.parse("[abc");
+        qNameParser.parse("abc[");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheTheeCanNOTBeRightSquareBracket() throws IllegalNameException{
-        qNameParser.parse("]ab");
+        qNameParser.parse("ab]");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheMoreThenTheeCanNOTBeRightSquareBracket() throws IllegalNameException{
-        qNameParser.parse("]abc");
+        qNameParser.parse("abc]");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheTheeCanNOTBeAsterisk() throws IllegalNameException{
-        qNameParser.parse("*ab");
+        qNameParser.parse("ab*");
     }
 
     @Test(expected = IllegalNameException.class)
     public void testLastCharOfTheMoreThenTheeCanNOTBeAsterisk() throws IllegalNameException{
-        qNameParser.parse("*abc");
+        qNameParser.parse("abc*");
     }
 
     @Test(expected = IllegalNameException.class)
@@ -344,5 +338,140 @@ public class SimpleNameTest {
         qNameParser.parse("abc\r");
     }
 
+    @Test
+    public void testFirstAndLastCharOfTheTheeCanBeAnyUnicodeSymbolsExceptWRONG_SEQUENCE_NON_SPACE()
+            throws IllegalNameException{
+        qName = qNameParser.parse("aaa");
+        assertTrue(qName.getLocalName().equals("aaa"));
+    }
 
+    @Test
+    public void  testFirstAndLastCharOfTheMoreThenTreeCanBeAnyUnicodeSymbolsExceptWRONG_SEQUENCE_NON_SPACE()
+            throws IllegalNameException{
+        qName = qNameParser.parse("aaaa");
+        assertTrue(qName.getLocalName().equals("aaaa"));
+    }
+
+    //checking all symbols except first and last of simplename. The simplename has three or more symbols.
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeSlesh_1() throws IllegalNameException{
+        qNameParser.parse("a/b");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeSlesh_2() throws IllegalNameException{
+        qNameParser.parse("ab/c");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeColon_1() throws IllegalNameException{
+        qNameParser.parse(":ab");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeColon_2() throws IllegalNameException{
+        qNameParser.parse(":abc");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeLeftSquareBracket_1() throws IllegalNameException{
+        qNameParser.parse("a[b");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeLeftSquareBracket_2() throws IllegalNameException{
+        qNameParser.parse("ab[c");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeRightSquareBracket_1() throws IllegalNameException{
+        qNameParser.parse("a]b");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeRightSquareBracket_2() throws IllegalNameException{
+        qNameParser.parse("ab]c");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeAsterisk_1() throws IllegalNameException{
+        qNameParser.parse("a*b");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeAsterisk_2() throws IllegalNameException{
+        qNameParser.parse("ab*c");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeApostrophe_1() throws IllegalNameException{
+        qNameParser.parse("a'b");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeApostrophe_2() throws IllegalNameException{
+        qNameParser.parse("ab'c");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeQuote_1() throws IllegalNameException{
+        qNameParser.parse("a\"b");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeQuote_2() throws IllegalNameException{
+        qNameParser.parse("ab\"c");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBePipe_1() throws IllegalNameException{
+        qNameParser.parse("a|b");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBePipe_2() throws IllegalNameException{
+        qNameParser.parse("ab|c");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeWhiteSpaceExceptEasySpace_1()
+            throws IllegalNameException{
+        qNameParser.parse("a\nb");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeWWhiteSpaceExceptEasySpace_2()
+            throws IllegalNameException{
+        qNameParser.parse("ab\nc");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeWhiteSpaceExceptEasySpace_3()
+            throws IllegalNameException{
+        qNameParser.parse("a\rb");
+    }
+
+    @Test(expected = IllegalNameException.class)
+    public void testAllSymbolsExceptFirstAndLastCanNOTBeWhiteSpaceExceptEasySpace_4()
+            throws IllegalNameException{
+        qNameParser.parse("abc\r");
+    }
+    @Test
+    public void testAllSymbolsExceptFirstAndLastCanBeEasySpace_1() throws IllegalNameException{
+        qName = qNameParser.parse("a b");
+        assertTrue(qName.getLocalName().equals("a b"));
+    }
+
+    @Test
+    public void testAllSymbolsExceptFirstAndLastCanBeEasySpace_3() throws IllegalNameException{
+        qName = qNameParser.parse("ab c d");
+        assertTrue(qName.getLocalName().equals("ab c d"));
+    }
+
+    @Test
+    public void testAllSymbolsExceptFirstAndLastCanBeEasySpace_4() throws IllegalNameException{
+        qName = qNameParser.parse("ab   d");
+        assertTrue(qName.getLocalName().equals("ab   d"));
+    }
 }

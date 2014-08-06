@@ -58,7 +58,7 @@ public class PrefixTest {
     }
 
     @Test(expected = IllegalNameException.class)
-    public void testFirsSymbolCantBeAT_SIGN() throws IllegalNameException {
+    public void testFirsSymbolCanNOTBeAT_SIGN() throws IllegalNameException {
         qNameParser.parse("@abc:localname");
     }
 
@@ -102,7 +102,7 @@ public class PrefixTest {
         assertTrue(qName.getPrefix().equals('\u9FA5'+ "abc"));
     }
 
-    //symbols between right BASE_CHAR Symbols
+    //symbols between right BASE_CHAR Sequence
 
     @Test(expected = IllegalNameException.class)
     public void testFirstSymbolCanNOTBeCharBetweenBASE_CHAR_Sequence_1() throws IllegalNameException {
@@ -335,9 +335,6 @@ public class PrefixTest {
         qName = qNameParser.parse("abc" + '\u00B7' +":fgf");
         assertTrue(qName.getPrefix().equals("abc" + '\u00B7'));
     }
-
-
-    ////////////////////////////////////////////////////////////////////
 
     //symbols between BASE_CHAR Symbols
 
