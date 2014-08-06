@@ -1,5 +1,8 @@
 *~
 storage
+src\test\java\com\codenvy\testtask\qname\PrefixTestOld.java
+src\test\java\com\codenvy\testtask\qname\SimpleNameAndLocalNameTestOld.java
+src\test\java\com\codenvy\testtask\qname\CreatorOfRightSequenceOld.java
 .gitignore~ 
 ### Java ###
 *.class
@@ -14,10 +17,6 @@ storage
 *.ipr
 *.iws
 .idea/
-src/main/webapp/Simulate/
-src/main/webapp/Start/
-src/main/webapp/WEB-INF/classes/
-src/main/webappstorage
 
 ### Eclipse ###
 *.pydevproject
