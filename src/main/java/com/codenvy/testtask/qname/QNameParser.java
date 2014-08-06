@@ -240,14 +240,10 @@ public class QNameParser {
      * @throws IllegalNameException
      */
     private void checkSecondAndNextCharsOfXmlName(String xmlName) throws IllegalNameException {
-        //special checking for some symbols
+        //special checking for some symbols. This symbols are service char for class Pattern
         String line = xmlName.substring(1, xmlName.length());
-        String rightSymbolForXmlName = "a";//this is any valid symbol for xmlName
         if (line.contains("-")) {
-            line = line.replace("-", rightSymbolForXmlName);
-        }
-        if (line.contains("_")) {
-            line = line.replace("_", rightSymbolForXmlName);
+            line = line.replace("-", "");
         }
         if (line.contains("/")) {
             throw new IllegalNameException("line has invalid symbols");
