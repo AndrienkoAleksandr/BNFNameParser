@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * This is class for checking of working QNameParser
  * @author Created by Andrienko Alexander on 16.07.2014.
- * @version 0.3
+ * @version 0.4
  */
 public class App {
     public static void main( String[] args ) {

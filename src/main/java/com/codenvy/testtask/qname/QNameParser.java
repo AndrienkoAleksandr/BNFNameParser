@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * This class parses line to class QName
  * @author Created by Andrienko Alexander on 16.07.2014.
- * @version 0.3
+ * @version 0.4
  */
 public class QNameParser {
     /**
@@ -214,6 +214,13 @@ public class QNameParser {
      * @throws IllegalNameException
      */
     private void validXMLName(String xmlName) throws IllegalNameException {
+    /*JDK 1.7 has completed xmlNameParser:
+    * import com.sun.xml.internal.fastinfoset.org.apache.xerces.util.XMLChar;
+    * but we used our realization
+    */
+//        if(!XMLChar.isValidName(xmlName)) {
+//            throw new IllegalNameException();
+//        }
         checkingForEmptiness(xmlName);
         checkFirstCharOfXmlName(xmlName);
         checkSecondAndNextCharsOfXmlName(xmlName);
