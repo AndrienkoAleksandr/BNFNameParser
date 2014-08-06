@@ -226,11 +226,6 @@ public class QNameParser {
      */
     private void checkFirstCharOfXmlName(String xmlName) throws IllegalNameException {
         String symbol = xmlName.substring(0, 1);//get first symbol
-        //special checking for some symbols
-        if (symbol.equals("-")) {
-            throw new IllegalNameException("line has invalid symbols");
-        }
-        //main checking
         checkLineWithHelpRightSequence(xmlName.substring(0, 1), Constant.FIRST_CHAR_XML_NAME);
     }
 
