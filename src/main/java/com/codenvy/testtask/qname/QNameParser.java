@@ -82,7 +82,7 @@ public class QNameParser {
                 return;
             case 2:
                   if (line.equals("..")) {
-                      throw new IllegalNameException("double ':'");
+                      throw new IllegalNameException("double '.'");
                   } else {
                       if (line.charAt(0) == '.' || line.charAt(1) == '.') {//check first and second chars of line
                           String checkLine = line.replace(".", "");
@@ -182,14 +182,6 @@ public class QNameParser {
         Matcher matcher = pattern.matcher(line);
         if (matcher.find()) {
             throw new IllegalNameException();
-        }
-        /*special check for symbol '[' and ']',
-        * which classPattern can't check, because it's separator symbol for finding class symbols.
-        */
-        for (char elem: Constant.SPECIAL_CHECK.toCharArray()) {
-            if (line.contains(String.valueOf(elem))) {
-                throw new IllegalNameException();
-            }
         }
     }
 
