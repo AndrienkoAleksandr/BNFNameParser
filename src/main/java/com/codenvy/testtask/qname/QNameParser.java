@@ -36,9 +36,7 @@ public class QNameParser {
     * @throws IllegalNameException
     */
     private boolean isFullName(String line) throws IllegalNameException{
-        Pattern pattern = Pattern.compile("[:]+");//':' is exist at least one time
-        Matcher matcher = pattern.matcher(line);
-        return matcher.find();
+       return line.contains(":");
     }
 
     /**
@@ -48,14 +46,9 @@ public class QNameParser {
      * @throws IllegalNameException
      */
     private void checkingForEmptiness(String line) throws IllegalNameException {
-        if (line == null) {
-            IllegalNameException e = new IllegalNameException();
-            e.initCause(new NullPointerException());
-            throw e;
-        }
-        if (line.length() == 0) {
-            throw new IllegalNameException("Line is empty.");
-        }
+            if (line == null || line.length() == 0) {
+                throw new IllegalNameException("Line is empty.");
+            }
     }
 
     /**
@@ -81,17 +74,11 @@ public class QNameParser {
                 linesConsistOfOneCharSimpleName(line);
                 return;
             case 2:
-                  if (line.equals("..")) {
-                      throw new IllegalNameException("double ':'");
-                  } else {
-                      if (line.charAt(0) == '.' || line.charAt(1) == '.') {//check first and second chars of line
-                          String checkLine = line.replace(".", "");
-                          linesConsistOfOneCharSimpleName(checkLine);
-                      } else {
-                          linesConsistOfOneCharSimpleName(line);
-                      }
-                      return;
-                  }
+                if (line.equals("..")) {
+                    throw new IllegalNameException("double ':'");
+                }
+                linesConsistOfNonSpace(line);
+                return;
             default:// if line.length >= 3
                 validLineWithTreeOrMoreChar(line);
             break;
